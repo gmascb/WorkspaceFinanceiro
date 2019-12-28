@@ -1,0 +1,100 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import Classes.FinRelatorioFinanceiroClass;
+import Main.Principal;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import javax.swing.SpringLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JLabel;
+
+public class FinRelatorioFinanceiro extends JFrame {
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Principal frame = new Principal();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinRelatorioFinanceiro() {
+		setBounds(100, 100, 581, 387);
+		getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("565px"),},
+			new RowSpec[] {
+				FormFactory.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("14px"),
+				FormFactory.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("20px"),
+				FormFactory.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("14px"),
+				FormFactory.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("20px"),
+				RowSpec.decode("205px"),
+				RowSpec.decode("33px"),}));
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, "1, 10, fill, top");
+			{
+				JButton btnGerar = new JButton("Gerar");
+				btnGerar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						FinRelatorioFinanceiroClass novoRelatorio = new FinRelatorioFinanceiroClass();
+						novoRelatorio.gerarRelatorio();
+					}
+				});
+				btnGerar.setActionCommand("Gerar");
+				buttonPane.add(btnGerar);
+				getRootPane().setDefaultButton(btnGerar);
+			}
+			{
+				JButton btnSair = new JButton("Sair");
+				btnSair.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
+				btnSair.setActionCommand("Sair");
+				buttonPane.add(btnSair);
+			}
+		}
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		getContentPane().add(lblNewLabel, "1, 2, left, top");
+		
+		JDateChooser dateChooser = new JDateChooser();
+		getContentPane().add(dateChooser, "1, 4, left, top");
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		getContentPane().add(lblNewLabel_1, "1, 6, left, top");
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		getContentPane().add(dateChooser_1, "1, 8, left, top");
+	}
+}

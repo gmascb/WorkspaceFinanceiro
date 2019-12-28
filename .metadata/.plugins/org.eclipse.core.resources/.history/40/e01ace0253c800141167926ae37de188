@@ -1,0 +1,178 @@
+package Main;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JDesktopPane;
+
+import Forms.FinCFO;
+import Forms.FinCXA;
+import Forms.FinLAN;
+import Forms.FinRelatorioFinanceiro;
+import Forms.FinTDO;
+import Forms.FinXCX;
+
+public class Principal extends JFrame {
+
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Principal frame = new Principal();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Principal() {
+
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (UnsupportedLookAndFeelException e) {
+		    // handle exception
+		} catch (ClassNotFoundException e) {
+		    // handle exception
+		} catch (InstantiationException e) {
+		    // handle exception
+		} catch (IllegalAccessException e) {
+		    // handle exception
+		}
+		setTitle("Financeiro");
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 860, 640);
+		
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+
+		JMenu mnSistema = new JMenu("Sistema");
+		menuBar.add(mnSistema);
+
+		JMenuItem mntmSair = new JMenuItem("Sair");
+		mntmSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// sair
+				dispose();
+			}
+		});
+		mnSistema.add(mntmSair);
+
+		JMenu mnCadastros = new JMenu("Cadastros");
+		menuBar.add(mnCadastros);
+
+		JMenuItem mntmTipoDeDocumento = new JMenuItem("Tipo de Documento");
+		mntmTipoDeDocumento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FinTDO novaTelaTipoDeDocumento = new FinTDO();
+				novaTelaTipoDeDocumento.setBounds(0, 0, 845, 580);
+				contentPane.add(novaTelaTipoDeDocumento);
+				novaTelaTipoDeDocumento.setVisible(true);
+			}
+		});
+		mnCadastros.add(mntmTipoDeDocumento);
+
+		JMenuItem mntmContaCaixa = new JMenuItem("Conta Caixa");
+		mntmContaCaixa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				FinCXA novaTelaContaCaixa = new FinCXA();
+				novaTelaContaCaixa.setBounds(0, 0, 845, 580);
+				contentPane.add(novaTelaContaCaixa);
+				novaTelaContaCaixa.setVisible(true);
+			}
+		});
+		mnCadastros.add(mntmContaCaixa);
+
+		JMenuItem mntmClienteEFornecedores = new JMenuItem(
+				"Cliente e Fornecedores");
+		mntmClienteEFornecedores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				FinCFO novaTelaCliFor = new FinCFO();
+				novaTelaCliFor.setBounds(0, 0, 860, 640);
+				novaTelaCliFor.setMaximum(true);
+				contentPane.add(novaTelaCliFor);
+				novaTelaCliFor.setVisible(true);
+			}
+		});
+		mnCadastros.add(mntmClienteEFornecedores);
+
+		JMenu mnLanamentos = new JMenu("Lan\u00E7amentos");
+		menuBar.add(mnLanamentos);
+
+		JMenuItem mntmLanamentos = new JMenuItem("Lan\u00E7amento");
+		mntmLanamentos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				FinLAN novaTelaLan = new FinLAN();
+				novaTelaLan.setBounds(0, 0, 845, 580);
+				contentPane.add(novaTelaLan);
+				novaTelaLan.setVisible(true);
+			}
+		});
+		mnLanamentos.add(mntmLanamentos);
+
+		JMenuItem mntmExtratoDeCaixa = new JMenuItem("Extrato de Caixa");
+		mntmExtratoDeCaixa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				FinXCX novaTelaXCX = new FinXCX();
+				novaTelaXCX.setBounds(0, 0, 845, 580);
+				contentPane.add(novaTelaXCX);
+				novaTelaXCX.setVisible(true);
+			}
+		});
+		mnLanamentos.add(mntmExtratoDeCaixa);
+		
+		JMenu mnRelatorios = new JMenu("Relatorios");
+		menuBar.add(mnRelatorios);
+		
+		JMenuItem mntmRelatorioFinanceiro = new JMenuItem("Relatorio Financeiro");
+		mntmRelatorioFinanceiro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			
+				FinRelatorioFinanceiro novoRelatorio = new FinRelatorioFinanceiro();
+				novoRelatorio.setVisible(true);
+			
+			}
+		});
+		mnRelatorios.add(mntmRelatorioFinanceiro);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
+	}
+}

@@ -1,0 +1,133 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import Classes.FinRelatorioFinanceiroClass;
+import Main.Principal;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import javax.swing.SpringLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JLabel;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.SwingConstants;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+
+public class FinRelatorioFinanceiro extends JFrame {
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Principal frame = new Principal();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinRelatorioFinanceiro() {
+		setBounds(100, 100, 581, 387);
+		getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel panel = new JPanel();
+		getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		JPanel panelOpcoes = new JPanel();
+		panelOpcoes.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Op\u00E7\u00F5es do Relat\u00F3rio", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelOpcoes.setBounds(4, 98, 551, 132);
+		panel.add(panelOpcoes);
+		panelOpcoes.setLayout(null);
+		
+		JLabel lblDataIni = new JLabel("Data Inicial");
+		lblDataIni.setBounds(6, 82, 68, 14);
+		panelOpcoes.add(lblDataIni);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(6, 101, 87, 20);
+		panelOpcoes.add(dateChooser);
+		
+		JLabel lblNewLabel_1 = new JLabel("Data Final");
+		lblNewLabel_1.setBounds(138, 82, 68, 14);
+		panelOpcoes.add(lblNewLabel_1);
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		dateChooser_1.setBounds(138, 101, 87, 20);
+		panelOpcoes.add(dateChooser_1);
+		
+		final JRadioButton rdbtnAPagar = new JRadioButton("A Pagar");
+		rdbtnAPagar.setBounds(6, 16, 109, 23);
+		panelOpcoes.add(rdbtnAPagar);
+		buttonGroup.add(rdbtnAPagar);
+		
+		JRadioButton rdbtnAReceber = new JRadioButton("A Receber");
+		rdbtnAReceber.setBounds(6, 42, 109, 23);
+		panelOpcoes.add(rdbtnAReceber);
+		buttonGroup.add(rdbtnAReceber);
+		{
+			JButton btnSair = new JButton("Sair");
+			btnSair.setBounds(504, 314, 51, 23);
+			btnSair.setHorizontalAlignment(SwingConstants.RIGHT);
+			btnSair.setVerticalAlignment(SwingConstants.BOTTOM);
+			panel.add(btnSair);
+			btnSair.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+			btnSair.setActionCommand("Sair");
+		}
+		{
+			JButton btnGerar = new JButton("Gerar");
+			btnGerar.setBounds(435, 314, 59, 23);
+			btnGerar.setHorizontalAlignment(SwingConstants.RIGHT);
+			btnGerar.setVerticalAlignment(SwingConstants.BOTTOM);
+			panel.add(btnGerar);
+			btnGerar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					FinRelatorioFinanceiroClass novoRelatorio = new FinRelatorioFinanceiroClass();
+					int pagrec = 0;
+					
+					if(rdbtnAPagar.isSelected())
+					 pagrec = 1; //a pagar
+					else
+						pagrec = 2;//a receber.
+					
+					
+					novoRelatorio.gerarRelatorio(pagRec,dtinicial,dtfinal);
+				}
+			});
+			btnGerar.setActionCommand("Gerar");
+			getRootPane().setDefaultButton(btnGerar);
+		}
+		
+		JLabel lblInf = new JLabel("<html>Relat\u00F3rio Financeiro ser\u00E1 utilizado para demonstrar movimenta\u00E7\u00F5es financeiras inseridas no banco de dados para gerenciar e provisionar dados futuros.</html>");
+		lblInf.setBounds(10, 11, 545, 48);
+		panel.add(lblInf);
+	}
+}

@@ -1,0 +1,225 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Rectangle;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import Classes.FinCXAClass;
+import Conexao.Conexao;
+import Main.Principal;
+
+public class FinCXA extends JInternalFrame {
+
+	private final JPanel contentPanel = new JPanel();
+	private JTextField txtCodigo;
+	private JTextField txtDesc;
+	private JTextField txtSaldoinicial;
+	private JTable tblCxa;
+	private JButton btnAtualiza;
+	private JButton btnCancela;
+	
+	
+	
+	
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Principal frame = new Principal();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinCXA() {
+		setNormalBounds(new Rectangle(0, 0, 840, 580));
+		setTitle("Contas Caixas");
+		setBounds(100, 100, 839, 630);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+
+		JLabel lblCadastroDeContas = new JLabel("Cadastro de Contas Caixas");
+		lblCadastroDeContas.setBounds(10, 11, 203, 14);
+		contentPanel.add(lblCadastroDeContas);
+
+		JLabel lblDescrio = new JLabel("Descri\u00E7\u00E3o: ");
+		lblDescrio.setBounds(10, 84, 84, 14);
+		contentPanel.add(lblDescrio);
+
+		JLabel lblSaldoInicial = new JLabel("Saldo Inicial");
+		lblSaldoInicial.setBounds(334, 53, 113, 14);
+		contentPanel.add(lblSaldoInicial);
+
+		JLabel lblCdigo = new JLabel("C\u00F3digo: ");
+		lblCdigo.setBounds(10, 50, 46, 14);
+		contentPanel.add(lblCdigo);
+
+		txtCodigo = new JTextField();
+		txtCodigo.setBounds(113, 47, 86, 24);
+		contentPanel.add(txtCodigo);
+		txtCodigo.setColumns(10);
+
+		txtDesc = new JTextField();
+		txtDesc.setBounds(113, 81, 86, 24);
+		contentPanel.add(txtDesc);
+		txtDesc.setColumns(10);
+
+		txtSaldoinicial = new JTextField();
+		txtSaldoinicial.setText("0.00");
+		txtSaldoinicial.setBounds(437, 50, 86, 24);
+		contentPanel.add(txtSaldoinicial);
+		txtSaldoinicial.setColumns(10);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(6, 179, 815, 414);
+		contentPanel.add(scrollPane);
+
+		tblCxa = new JTable();
+		tblCxa.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
+				"C\u00F3digo", "Descri\u00E7\u00E3o", "Saldo Inicial",
+				"Saldo Atual" }));
+		scrollPane.setViewportView(tblCxa);
+		{
+			final JPanel buttonPane = new JPanel();
+			buttonPane.setBounds(191, 129, 630, 38);
+			contentPanel.add(buttonPane);
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			{
+				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+
+						dispose();
+					}
+				});
+
+				JButton btnSalvar = new JButton("Salvar");
+				btnSalvar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+					
+						try {
+							// cria instancia que será incluida no banco.
+							FinCXAClass novaCXA = new FinCXAClass ();
+
+							// seta as variaveis
+							novaCXA.setCodCxa(Integer.parseInt(txtCodigo.getText()));
+							novaCXA.setDescricao(txtDesc.getText());
+							novaCXA.setSaldoInicial(Double.parseDouble(txtSaldoinicial.getText()));
+							
+							// insere cliente no banco
+							novaCXA.cadastrar();
+
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(null,
+									"ERRO:" + e1.getMessage());
+						}
+					
+					
+					
+					}
+				});
+				buttonPane.add(btnSalvar);
+				
+				JButton btnEditar = new JButton("Editar");
+				btnEditar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+					
+						// retira os botões
+						buttonPane.setVisible(false);
+						
+						//Aparece os novos botões.
+						btnCancela.setVisible(true);
+						btnAtualiza.setVisible(true);
+						
+						
+						//traz os dados pra tela.
+						try {
+							// conecta no banco.
+							Conexao acessaBanco = new Conexao();
+
+							// traz o resultado do banco para a variavel rs.
+							ResultSet rs = acessaBanco
+									.aplicaQueryComRetorno("SELECT CODCXA,DESCRICAO,SALDOINICIAL FROM FCXA WHERE CODCXA = "
+											+ tblCxa.getValueAt(
+													tblCxa.getSelectedRow(), 0));
+
+							// pula uma linha para iniciar os dados da variavel
+							// rs.
+							rs.next();
+
+							// /joga os campos da tabela para os campos da tela.
+
+							txtCodigo.setText(rs.getString("CODCXA"));
+							txtDesc.setText(rs.getString(2));
+							txtSaldoinicial.setText(rs.getString(3));
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					
+					
+					
+					
+					}
+				});
+				buttonPane.add(btnEditar);
+
+				JButton btnDelete = new JButton("Delete");
+				buttonPane.add(btnDelete);
+
+				JButton btnLoad = new JButton("Load");
+				btnLoad.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						
+						//carrega os dados na tabela.
+						FinCXAClass novoCxa = new FinCXAClass();
+						
+						novoCxa.selecionaValores();
+
+					}
+				});
+				buttonPane.add(btnLoad);
+				cancelButton.setActionCommand("Cancel");
+				buttonPane.add(cancelButton);
+
+			}
+		}
+		
+	    btnAtualiza = new JButton("Atualiza");
+	    btnAtualiza.setVisible(false);
+		btnAtualiza.setBounds(552, 46, 90, 52);
+		contentPanel.add(btnAtualiza);
+		
+		btnCancela = new JButton("Cancela");
+		btnCancela.setVisible(false);
+		btnCancela.setBounds(654, 46, 90, 52);
+		contentPanel.add(btnCancela);
+	}
+
+}

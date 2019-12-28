@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/commons-beanutils-1.9.2.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/groovy-2.4.1.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/itext-pdfa-5.5.5.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/itextpdf-5.5.5.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/jasperreports-6.0.3.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/jasperreports-fonts-6.0.3.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/jasperreports-functions-6.0.3.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/joda-time-2.4.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/org.springframework.beans-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="Recursos/JasperArchives/org.springframework.core-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="Recursos/SQL/sqljdbc4.jar"/>
+	<classpathentry kind="lib" path="Recursos/JCalendar/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="Recursos/JCalendar/jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="Recursos/JCalendar/jgoodies-looks-2.4.1.jar"/>
+	<classpathentry kind="lib" path="Recursos/JCalendar/junit-4.6.jar"/>
+	<classpathentry kind="lib" path="forms-1.3.0.jar" sourcepath="forms-1.3.0-src.zip"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

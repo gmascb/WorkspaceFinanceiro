@@ -1,0 +1,93 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import Classes.FinRelatorioFinanceiroClass;
+import Main.Principal;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import javax.swing.SpringLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import com.toedter.calendar.JDateChooser;
+
+public class FinRelatorioFinanceiro extends JFrame {
+
+	private final JPanel contentPanel = new JPanel();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Principal frame = new Principal();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinRelatorioFinanceiro() {
+		setBounds(100, 100, 581, 387);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("46px"),
+				ColumnSpec.decode("292px"),},
+			new RowSpec[] {
+				RowSpec.decode("96px"),
+				RowSpec.decode("46px"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("46px"),}));
+		
+		JDateChooser dateChooser = new JDateChooser();
+		contentPanel.add(dateChooser, "2, 2, fill, fill");
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		contentPanel.add(dateChooser_1, "2, 4, fill, fill");
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				JButton btnGerar = new JButton("Gerar");
+				btnGerar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						FinRelatorioFinanceiroClass novoRelatorio = new FinRelatorioFinanceiroClass();
+						novoRelatorio.gerarRelatorio();
+					}
+				});
+				btnGerar.setActionCommand("Gerar");
+				buttonPane.add(btnGerar);
+				getRootPane().setDefaultButton(btnGerar);
+			}
+			{
+				JButton btnSair = new JButton("Sair");
+				btnSair.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
+				btnSair.setActionCommand("Sair");
+				buttonPane.add(btnSair);
+			}
+		}
+	}
+}

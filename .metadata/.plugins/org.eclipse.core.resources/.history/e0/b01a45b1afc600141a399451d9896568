@@ -1,0 +1,171 @@
+package Classes;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import Conexao.Conexao;
+
+public class FinTDOClass {
+
+	private int CODTDO;
+	private String NOME;
+	private int PAGREC;
+
+	public int getCODTDO() {
+		return CODTDO;
+	}
+
+	public void setCODTDO(int CODTDO) {
+		this.CODTDO = CODTDO;
+	}
+
+	public String getNOME() {
+		return NOME;
+	}
+
+	public void setNOME(String NOME) {
+		this.NOME = NOME;
+	}
+
+	public int getPAGREC() {
+		return PAGREC;
+	}
+
+	public void setPAGREC(int PAGREC) {
+		this.PAGREC = PAGREC;
+	}
+
+	public void cadastrar() throws Exception {
+		try {
+			// Cria objeto de Acesso ao banco
+			Conexao acessaBanco = new Conexao();
+
+			// Executou a query (que esta sendo passada por parametro)
+			acessaBanco.aplicaQuerySemRetorno("INSERT INTO FTDO VALUES ("
+					+ CODTDO + ",'" + NOME + "'," + PAGREC + ")");
+
+			JOptionPane.showMessageDialog(null, "Salvo com Sucesso");
+		}
+		// Faz o tratamento da exceção que pode ser retornada
+		catch (Exception e) {
+			throw e;
+		}
+
+	}
+
+	public ArrayList<FinTDOClass> selecionar() throws Exception {
+
+		ResultSet rs = null;
+
+		try {
+			// Cria objeto de Acesso ao banco
+			Conexao acessaBanco = new Conexao();
+
+			// Executou a query (que esta sendo passada por parametro)
+			rs = acessaBanco.aplicaQueryComRetorno("SELECT * FROM FTDO");
+
+		}
+		// Faz o tratamento da exceção que pode ser retornada
+		catch (Exception e) {
+			throw e;
+		}
+
+		// Criou uma lista de Tipos de Documento
+		ArrayList<FinTDOClass> listaTDO = new ArrayList<FinTDOClass>();
+
+		// Preencheu a lista de cursos, percorrendo cada linha
+		while (rs.next()) {
+
+			FinTDOClass novoTdo = new FinTDOClass();
+
+			novoTdo.setCODTDO(rs.getInt(1));
+			novoTdo.setNOME(rs.getString(2));
+			novoTdo.setPAGREC(rs.getInt(3));
+
+			// Adiciona cada item a lista
+			listaTDO.add(novoTdo);
+		}
+
+		// retornar a lista de cursos
+		return listaTDO;
+	}
+
+	public void selecionaValores(JTable tblTdo) {
+		try {
+			// Busca a tabela
+			DefaultTableModel modelo = (DefaultTableModel) tblTdo.getModel();
+
+			// Limpa os valores da tabela
+			while (modelo.getRowCount() != 0) {
+				modelo.removeRow(0);
+			}
+			// Busca os cursos no banco de dados
+
+			FinTDOClass novoTDO = new FinTDOClass();
+			ArrayList<FinTDOClass> listaTdo = novoTDO.selecionar();
+
+			for (FinTDOClass c : listaTdo) {
+
+				int codigo = c.getCODTDO();
+				String nome = c.getNOME();
+				int PagRec = c.getPAGREC();
+
+				Object[] linha = { codigo, nome, PagRec };
+
+				// Adiciona cada linha a tabela
+				modelo.addRow(linha);
+			}
+		}
+		// Tratamento da exceção
+		catch (Exception e) {
+			JOptionPane
+					.showMessageDialog(
+							null,
+							"Ocorreu um erro ao consultar o(s) curso(s) desejado(s). \n\n Mais informações : \n\nErro: "
+									+ e.getClass() + "\n\n" + e.getMessage());
+		}
+	}
+
+	public void deleta(JTable tblTdo) {
+		try {
+			// conecta no banco.
+			Conexao acessaBanco = new Conexao();
+			// passa a query que será realizada.
+			if (JOptionPane
+					.showConfirmDialog(null,
+							"Deseja Realmente excluir o item Selecionado?\nEstá operação é irreversível!") == 0)
+				acessaBanco
+						.aplicaQuerySemRetorno("DELETE FROM FTDO WHERE CODTDO= "
+								+ tblTdo.getValueAt(tblTdo.getSelectedRow(), 0));
+			
+			selecionaValores(tblTdo);
+			
+			
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "ERRO: \n" + e.getClass()
+					+ "\n" + e.getMessage());
+		}
+	}
+
+	public void atualiza(JTable tblTdo)
+	{
+		try {
+			//conecta no banco
+			Conexao acessaBanco = new Conexao();
+			
+			//guarda os dados dentro da consulta dentro da variavel rs.
+	
+			acessaBanco.aplicaQuerySemRetorno("UPDATE FTDO SET "
+					  + ", NOME="+ NOME
+					  + ", PAGREC="+ PAGREC);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

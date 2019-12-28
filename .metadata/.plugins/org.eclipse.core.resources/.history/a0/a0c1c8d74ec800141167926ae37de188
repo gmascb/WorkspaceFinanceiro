@@ -1,0 +1,75 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import com.toedter.calendar.JDateChooser;
+
+public class FinLanBaixa extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			FinLanBaixa dialog = new FinLanBaixa();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinLanBaixa() {
+		
+		setModal(true);
+		
+		setBounds(100, 100, 653, 423);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		
+		JLabel lblInf = new JLabel("<html>Este processo ir\u00E1 realizar a baixa do lan\u00E7amento financeiro. A Baixa do Lan\u00E7amento ir\u00E1 criar um extrato de caixa que posteriormente poder\u00E1 ser compensado para afetar o saldo da conta/caixa vinculado.</html>");
+		lblInf.setBounds(6, 6, 625, 109);
+		contentPanel.add(lblInf);
+		
+		JDateChooser dtcDataBaixa = new JDateChooser();
+		dtcDataBaixa.setBounds(151, 185, 168, 28);
+		contentPanel.add(dtcDataBaixa);
+		
+		JLabel lblDataDaBaixa = new JLabel("Data da Baixa");
+		lblDataDaBaixa.setBounds(6, 190, 133, 20);
+		contentPanel.add(lblDataDaBaixa);
+		
+		JLabel lblRefDoLanamento = new JLabel("Ref. do Lan\u00E7amento");
+		lblRefDoLanamento.setBounds(6, 142, 111, 16);
+		contentPanel.add(lblRefDoLanamento);
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				JButton okButton = new JButton("OK");
+				okButton.setActionCommand("OK");
+				buttonPane.add(okButton);
+				getRootPane().setDefaultButton(okButton);
+			}
+			{
+				JButton cancelButton = new JButton("Cancel");
+				cancelButton.setActionCommand("Cancel");
+				buttonPane.add(cancelButton);
+			}
+		}
+	}
+}

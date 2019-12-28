@@ -1,0 +1,100 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.sql.ResultSet;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
+
+import Conexao.Conexao;
+import Main.Principal;
+
+import com.toedter.calendar.JDateChooser;
+
+import javax.swing.JLabel;
+
+public class FinXCXCompensar extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+Principal main = new Principal();
+main.setVisible(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinXCXCompensar(JTable tblXcx) {
+		setTitle("Compensar Extrato");
+		setBounds(100, 100, 450, 300);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(166, 132, 114, 28);
+		contentPanel.add(dateChooser);
+
+		JLabel lblDataDeCompensao = new JLabel("Data de Compensa\u00E7\u00E3o:");
+		lblDataDeCompensao.setBounds(6, 139, 157, 16);
+		contentPanel.add(lblDataDeCompensao);
+
+		JLabel lblInf = new JLabel(
+				"<html> Este processo ir\u00E1 realizar a compensa\u00E7\u00E3o do Extrato de Caixa para que o mesmo realize atualiza\u00E7\u00E3o do Saldo da Conta/Caixa que o mesmo faz Refer\u00EAncia. </html>");
+		lblInf.setBounds(6, 6, 422, 71);
+		contentPanel.add(lblInf);
+
+		JLabel lblRefDoExtrato = new JLabel("Ref. do Extrato de Caixa:");
+		lblRefDoExtrato.setBounds(6, 104, 136, 16);
+		contentPanel.add(lblRefDoExtrato);
+
+		JLabel lblRef = new JLabel("");
+		lblRef.setBounds(166, 104, 55, 16);
+		contentPanel.add(lblRef);
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				JButton btnExecutar = new JButton("Executar");
+				btnExecutar.setActionCommand("OK");
+				buttonPane.add(btnExecutar);
+				getRootPane().setDefaultButton(btnExecutar);
+			}
+			{
+				JButton cancelButton = new JButton("Cancel");
+				cancelButton.setActionCommand("Cancel");
+				buttonPane.add(cancelButton);
+			}
+		}
+	}
+
+	public void buscaIDXCX(JTable tblXcx) {
+
+		Conexao acessaBanco = new Conexao();
+		try {
+			ResultSet rs = acessaBanco
+					.aplicaQueryComRetorno("SELECT IDXCX FROM FXCX WHERE IDXCX = "
+							+ tblXcx.getValueAt(tblXcx.getSelectedRow(), 0));
+
+			rs.next();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+}

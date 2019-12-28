@@ -1,0 +1,98 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import Classes.FinRelatorioFinanceiroClass;
+import Main.Principal;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import javax.swing.SpringLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JLabel;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.SwingConstants;
+
+public class FinRelatorioFinanceiro extends JFrame {
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Principal frame = new Principal();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinRelatorioFinanceiro() {
+		setBounds(100, 100, 581, 387);
+		getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel panel = new JPanel();
+		getContentPane().add(panel);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		panel.add(lblNewLabel);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		panel.add(dateChooser);
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		panel.add(lblNewLabel_1);
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		panel.add(dateChooser_1);
+		{
+			JButton btnSair = new JButton("Sair");
+			btnSair.setHorizontalAlignment(SwingConstants.RIGHT);
+			btnSair.setVerticalAlignment(SwingConstants.BOTTOM);
+			panel.add(btnSair);
+			btnSair.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
+			btnSair.setActionCommand("Sair");
+		}
+		{
+			JButton btnGerar = new JButton("Gerar");
+			btnGerar.setHorizontalAlignment(SwingConstants.RIGHT);
+			btnGerar.setVerticalAlignment(SwingConstants.BOTTOM);
+			panel.add(btnGerar);
+			btnGerar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					FinRelatorioFinanceiroClass novoRelatorio = new FinRelatorioFinanceiroClass();
+					novoRelatorio.gerarRelatorio();
+				}
+			});
+			btnGerar.setActionCommand("Gerar");
+			getRootPane().setDefaultButton(btnGerar);
+		}
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane);
+		}
+	}
+}

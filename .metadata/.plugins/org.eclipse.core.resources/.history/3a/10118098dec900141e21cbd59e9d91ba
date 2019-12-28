@@ -1,0 +1,204 @@
+package Main;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
+
+import javax.swing.JInternalFrame;
+import javax.swing.JDesktopPane;
+
+import Forms.FinCFO;
+import Forms.FinCXA;
+import Forms.FinLAN;
+import Forms.FinRelatorioFinanceiro;
+import Forms.FinTDO;
+import Forms.FinXCX;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
+
+public class Principal extends JFrame {
+
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Principal frame = new Principal();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Principal() {
+
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (UnsupportedLookAndFeelException e) {
+		    // handle exception
+		} catch (ClassNotFoundException e) {
+		    // handle exception
+		} catch (InstantiationException e) {
+		    // handle exception
+		} catch (IllegalAccessException e) {
+		    // handle exception
+		}
+		setTitle("Financeiro");
+
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 860, 640);
+		
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+
+		JMenu mnSistema = new JMenu("Sistema");
+		mnSistema.setMnemonic('S');
+		menuBar.add(mnSistema);
+
+		JMenuItem mntmSair = new JMenuItem("Sair");
+		mntmSair.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		mntmSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// sair
+				dispose();
+			}
+		});
+		mnSistema.add(mntmSair);
+
+		JMenu mnCadastros = new JMenu("Cadastros");
+		mnCadastros.setMnemonic('c');
+		menuBar.add(mnCadastros);
+
+		JMenuItem mntmTipoDeDocumento = new JMenuItem("Tipo de Documento");
+		mntmTipoDeDocumento.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK));
+		mntmTipoDeDocumento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				FinTDO novaTelaTipoDeDocumento = new FinTDO();
+				novaTelaTipoDeDocumento.setBounds(0, 0, 845, 580);
+				contentPane.add(novaTelaTipoDeDocumento);
+				novaTelaTipoDeDocumento.setVisible(true);
+			}
+		});
+		mnCadastros.add(mntmTipoDeDocumento);
+
+		JMenuItem mntmContaCaixa = new JMenuItem("Conta Caixa");
+		mntmContaCaixa.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+		mntmContaCaixa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				FinCXA novaTelaContaCaixa = new FinCXA();
+				novaTelaContaCaixa.setBounds(0, 0, 845, 580);
+				contentPane.add(novaTelaContaCaixa);
+				novaTelaContaCaixa.setVisible(true);
+			}
+		});
+		mnCadastros.add(mntmContaCaixa);
+
+		JMenuItem mntmClienteEFornecedores = new JMenuItem(
+				"Cliente e Fornecedores");
+		mntmClienteEFornecedores.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
+		mntmClienteEFornecedores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				FinCFO novaTelaCliFor;
+
+					novaTelaCliFor = new FinCFO();
+					novaTelaCliFor.setBounds(0, 0, 860, 640);
+					contentPane.add(novaTelaCliFor);
+					novaTelaCliFor.setVisible(true);
+
+					// TODO Auto-generated catch block
+
+			}
+		});
+		mnCadastros.add(mntmClienteEFornecedores);
+
+		JMenu mnLanamentos = new JMenu("Lan\u00E7amentos");
+		mnLanamentos.setMnemonic('L');
+		menuBar.add(mnLanamentos);
+
+		JMenuItem mntmLanamentos = new JMenuItem("Lan\u00E7amento");
+		mntmLanamentos.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
+		mntmLanamentos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				FinLAN novaTelaLan;
+				try {
+					novaTelaLan = new FinLAN();
+					novaTelaLan.setBounds(0, 0, 845, 580);
+					contentPane.add(novaTelaLan);
+					novaTelaLan.setVisible(true);
+				} catch (PropertyVetoException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+		mnLanamentos.add(mntmLanamentos);
+
+		JMenuItem mntmExtratoDeCaixa = new JMenuItem("Extrato de Caixa");
+		mntmExtratoDeCaixa.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
+		mntmExtratoDeCaixa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				FinXCX novaTelaXCX = new FinXCX();
+				novaTelaXCX.setBounds(0, 0, 845, 580);
+				contentPane.add(novaTelaXCX);
+				novaTelaXCX.setVisible(true);
+			}
+		});
+		mnLanamentos.add(mntmExtratoDeCaixa);
+		
+		JMenu mnRelatorios = new JMenu("Relatorios");
+		mnRelatorios.setMnemonic('R');
+		menuBar.add(mnRelatorios);
+		
+		JMenuItem mntmRelatorioFinanceiro = new JMenuItem("Relatorio Financeiro");
+		mntmRelatorioFinanceiro.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
+		mntmRelatorioFinanceiro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			
+				FinRelatorioFinanceiro novoRelatorio = new FinRelatorioFinanceiro();
+				novoRelatorio.setVisible(true);
+			
+			}
+		});
+		mnRelatorios.add(mntmRelatorioFinanceiro);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
+	}
+}

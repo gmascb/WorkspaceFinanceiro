@@ -1,0 +1,239 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Rectangle;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import Classes.FinCFOClass;
+import Conexao.Conexao;
+import Main.Principal;
+
+public class FinCFO extends JInternalFrame {
+
+	private final JPanel contentPanel = new JPanel();
+	private JTextField txtcodcfo;
+	private JTextField txtNome;
+	private JTextField txtCGCCFO;
+	private JTextField txtEndereco;
+	private JTextField txtTelefone;
+	private JTable tblCFO;
+	private JPanel buttonPane;
+	private JButton btnAtualizar;
+	private JButton btnCancelar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Principal frame = new Principal();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public FinCFO() {
+		
+		setNormalBounds(new Rectangle(0, 0, 840, 580));
+		setTitle("Clientes e Fornecedores");
+		setBounds(100, 100, 840, 580);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+
+		JLabel lblCadastroDeClientes = new JLabel(
+				"Cadastro de Clientes e Fornecedores");
+		lblCadastroDeClientes.setBounds(10, 11, 237, 14);
+		contentPanel.add(lblCadastroDeClientes);
+
+		JLabel lblCdigo = new JLabel("C\u00F3digo :");
+		lblCdigo.setBounds(20, 36, 66, 14);
+		contentPanel.add(lblCdigo);
+
+		JLabel lblNome = new JLabel("Nome :");
+		lblNome.setBounds(20, 77, 56, 14);
+		contentPanel.add(lblNome);
+
+		JLabel lblCpfcnpj = new JLabel("CPF/CNPJ :");
+		lblCpfcnpj.setBounds(311, 39, 66, 14);
+		contentPanel.add(lblCpfcnpj);
+
+		JLabel lblEndereo = new JLabel("Endere\u00E7o :");
+		lblEndereo.setBounds(311, 74, 76, 14);
+		contentPanel.add(lblEndereo);
+
+		JLabel lblTelefone = new JLabel("Telefone :");
+		lblTelefone.setBounds(20, 117, 66, 14);
+		contentPanel.add(lblTelefone);
+
+		txtcodcfo = new JTextField();
+		txtcodcfo.setBounds(132, 36, 86, 24);
+		contentPanel.add(txtcodcfo);
+		txtcodcfo.setColumns(10);
+
+		txtNome = new JTextField();
+		txtNome.setBounds(132, 74, 86, 24);
+		contentPanel.add(txtNome);
+		txtNome.setColumns(10);
+
+		txtCGCCFO = new JTextField();
+		txtCGCCFO.setBounds(423, 36, 86, 24);
+		contentPanel.add(txtCGCCFO);
+		txtCGCCFO.setColumns(10);
+
+		txtEndereco = new JTextField();
+		txtEndereco.setBounds(423, 71, 86, 24);
+		contentPanel.add(txtEndereco);
+		txtEndereco.setColumns(10);
+
+		txtTelefone = new JTextField();
+		txtTelefone.setBounds(132, 114, 86, 24);
+		contentPanel.add(txtTelefone);
+		txtTelefone.setColumns(10);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 227, 812, 316);
+		contentPanel.add(scrollPane);
+
+		tblCFO = new JTable();
+		tblCFO.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
+				"C\u00F3digo", "Nome", "CPF/CNPJ", "Endereco", "Telefone" }));
+		scrollPane.setViewportView(tblCFO);
+		{
+			buttonPane = new JPanel();
+			buttonPane.setBounds(456, 177, 378, 38);
+			contentPanel.add(buttonPane);
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			{
+				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						dispose();
+					}
+				});
+
+				JButton btnInsert = new JButton("Insert");
+				btnInsert.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+
+						try {
+							// cria instancia que será incluida no banco.
+							FinCFOClass novoCliente = new FinCFOClass();
+
+							// seta as variaveis
+							novoCliente.setCODCFO(Integer.parseInt(txtcodcfo
+									.getText()));
+							novoCliente.setNOME(txtNome.getText());
+							novoCliente.setCGCCFO(txtCGCCFO.getText());
+							novoCliente.setENDERECO(txtEndereco.getText());
+							novoCliente.setTELEFONE(txtTelefone.getText());
+
+							// insere cliente no banco
+							novoCliente.cadastrar();
+
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(null,
+									"ERRO:" + e.getMessage());
+						}
+
+					}
+				});
+				buttonPane.add(btnInsert);
+
+				JButton btnLoad = new JButton("Load");
+				btnLoad.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+
+						FinCFOClass novoCliFor = new FinCFOClass();
+
+						novoCliFor.selecionaValores(tblCFO);
+
+					}
+				});
+
+				JButton btnDelete = new JButton("Delete");
+				btnDelete.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						FinCFOClass novoCliFor = new FinCFOClass();
+						novoCliFor.deleta(tblCFO);
+					}
+				});
+				
+				JButton btnEditar = new JButton("Editar");
+				btnEditar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+					
+						//buttonPane fica invisivel
+						buttonPane.setVisible(false);
+						//aparece botão para salvar o Editado.
+						btnAtualizar.setVisible(true);
+						btnCancelar.setVisible(true);	
+												
+						//muda o campo de IDLAN para disable
+						txtcodcfo.setEnabled(false);
+						
+						try {
+							//cria conexão para pegar os campos do cli/for
+							Conexao acessaBanco = new Conexao();
+							
+							//busca os dados do cliente e pôe os mesmos no objeto rs.
+							ResultSet rs = acessaBanco.aplicaQueryComRetorno("SELECT * FROM FCFO WHERE CODCFO = "+tblCFO.getValueAt(
+									tblCFO.getSelectedRow(), 0));
+							
+							//atualiza os campos da tela com os dados do que foi retornado na consulta sql.
+							txtcodcfo.setText(rs.getString("CODCFO"));
+							txtNome.setText(rs.getString("NOME"));
+							txtCGCCFO.setText(rs.getString("CGCCFO"));
+							txtEndereco.setText(rs.getString("ENDERECO"));
+							txtTelefone.setText(rs.getString("TELEFONE"));
+							
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+					
+					
+					
+					}
+				});
+				buttonPane.add(btnEditar);
+				buttonPane.add(btnDelete);
+				buttonPane.add(btnLoad);
+				cancelButton.setActionCommand("Cancel");
+				buttonPane.add(cancelButton);
+			}
+		}
+		
+		btnAtualizar = new JButton("Atualizar");
+		btnAtualizar.setBounds(20, 157, 90, 28);
+		contentPanel.add(btnAtualizar);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setBounds(128, 157, 90, 28);
+		contentPanel.add(btnCancelar);
+	}
+}

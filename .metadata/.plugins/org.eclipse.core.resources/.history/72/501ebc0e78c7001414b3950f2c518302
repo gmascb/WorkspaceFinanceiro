@@ -1,0 +1,181 @@
+package Classes;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import Conexao.Conexao;
+
+public class FinCFOClass {
+
+	private int CODCFO;
+	private String NOME;
+	private String CGCCFO;
+	private String ENDERECO;
+	private String TELEFONE;
+
+	public int getCODCFO() {
+		return CODCFO;
+	}
+
+	public void setCODCFO(int CODCFO) {
+		this.CODCFO = CODCFO;
+	}
+
+	public String getNOME() {
+		return NOME;
+	}
+
+	public void setNOME(String NOME) {
+		this.NOME = NOME;
+	}
+
+	public String getCGCCFO() {
+		return CGCCFO;
+	}
+
+	public void setCGCCFO(String CGCCFO) {
+		this.CGCCFO = CGCCFO;
+	}
+
+	public String getENDERECO() {
+		return ENDERECO;
+	}
+
+	public void setENDERECO(String ENDERECO) {
+		this.ENDERECO = ENDERECO;
+	}
+
+	public String getTELEFONE() {
+		return TELEFONE;
+	}
+
+	public void setTELEFONE(String TELEFONE) {
+		this.TELEFONE = TELEFONE;
+	}
+
+	public void cadastrar() {
+		// cria objeto da classe de conexão com o banco.
+		try {
+			Conexao acessaBanco = new Conexao();
+			acessaBanco.aplicaQuerySemRetorno("INSERT INTO FCFO VALUES ("
+					+ CODCFO + ",'" + NOME + "','" + CGCCFO + "','" + ENDERECO
+					+ "','" + TELEFONE + "')");
+			JOptionPane.showMessageDialog(null,
+					"Cliente/Fornecedor Cadastrado com Sucesso!");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			JOptionPane
+					.showMessageDialog(null,
+							"Cliente/Fornecedor não pode ser salvo, avalie se os campos estão corretos!");
+			e.printStackTrace();
+		}
+	}
+
+	public void selecionaValores(JTable tblCFO) {
+		try {
+
+			// informa o modelo da tela
+			DefaultTableModel modelo = (DefaultTableModel) tblCFO.getModel();
+
+			// cria o novo cliente que será adicionado na lista de clientes que
+			// será enviado para o JTable
+			FinCFOClass novoCliente = new FinCFOClass();
+
+			// apaga a tabela para não incluí-la 2x.
+			while (modelo.getRowCount() != 0) {
+				modelo.removeRow(0);
+			}
+
+			// Metodo XXX.selecionar é um metodo que retornará todos os
+			// clientes/ fornecedores do banco em forma
+			// de ArrayList<FinCFOClass>
+			// desta forma teremos uma lista com todos os clientes fornecedores
+			// que estão no banco.
+
+			ArrayList<FinCFOClass> listaCFO = novoCliente.selecionar();
+
+			// faremos um foreach para enviar os valores da lista para dentro da
+			// tabela.
+
+			for (FinCFOClass novoFinCFO : listaCFO) {
+
+				// ordem de inserir no banco e no modelo.
+				// codcfo, nome, cgccfo, endereco, telefone
+
+				// cada linha que será rodada no Array será adicionada a uma
+				// lista de objeto.
+				Object[] linhaTabela = { novoFinCFO.getCODCFO(),
+						novoFinCFO.getNOME(), novoFinCFO.getCGCCFO(),
+						novoFinCFO.getENDERECO(), novoFinCFO.getTELEFONE() };
+
+				// será adicionado a lista de objetos no modelo da tabela.
+				modelo.addRow(linhaTabela);
+			}
+			// Limpa os valores da tabela
+		} catch (Exception e) {
+
+		}
+	}
+
+	public ArrayList<FinCFOClass> selecionar() throws Exception {
+		ResultSet rs = null;
+		ArrayList<FinCFOClass> novaArray = new ArrayList<FinCFOClass>();
+
+		try {
+			Conexao acessaBanco = new Conexao();
+			rs = acessaBanco.aplicaQueryComRetorno("SELECT * FROM FCFO");
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Não realizar a busca dos clientes/fornecedores.");
+		}
+
+		while (rs.next()) {
+			// cria classe para receber da consulta sql.
+			FinCFOClass novoFinCFO = new FinCFOClass();
+
+			// seta os campos para o objeto.
+			novoFinCFO.setCODCFO(rs.getInt(1));
+			novoFinCFO.setNOME(rs.getString(2));
+			novoFinCFO.setCGCCFO(rs.getString(3));
+			novoFinCFO.setENDERECO(rs.getString(4));
+			novoFinCFO.setTELEFONE(rs.getString(5));
+
+			// adiciona no array que será retornado no final do metodo.
+			novaArray.add(novoFinCFO);
+
+		}
+		return novaArray;
+	}
+
+	public void deleta(JTable tblCXA) {
+		try {
+			// conecta no banco.
+			Conexao acessaBanco = new Conexao();
+			// passa a query que será realizada.
+			if (JOptionPane
+					.showConfirmDialog(null,
+							"Deseja Realmente excluir o item Selecionado?\nEstá operação é irreversível!") == 0)
+				acessaBanco
+						.aplicaQuerySemRetorno("DELETE FROM FCFO WHERE CODCFO= "
+								+ tblCXA.getValueAt(tblCXA.getSelectedRow(), 0));
+			selecionaValores(tblCXA);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"ERRO: \n"+e.getClass() + "\n" + e.getMessage());
+		}
+	}
+
+	public void atualiza(JTable tblCfo)
+	{
+		
+		
+		
+	}
+
+
+}

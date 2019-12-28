@@ -1,0 +1,199 @@
+package Classes;
+
+import java.sql.Array;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import Conexao.Conexao;
+
+public class FinCXAClass {
+
+	private int codCxa;
+	private String descricao;
+	private double saldoInicial;
+	private double saldoAtual = 0.0;
+
+	public int getCodCxa() {
+		return codCxa;
+	}
+
+	public void setCodCxa(int codCxa) {
+		this.codCxa = codCxa;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public double getSaldoInicial() {
+		return saldoInicial;
+	}
+
+	public void setSaldoInicial(double saldoInicial) {
+		this.saldoInicial = saldoInicial;
+	}
+
+	public double getSaldoAtual() {
+		return saldoAtual;
+	}
+
+	public void setSaldoAtual(double saldoAtual) {
+		this.saldoAtual = saldoAtual;
+	}
+
+	public void cadastrar() {
+
+		try {
+			// cria conexao
+			Conexao acessaBanco = new Conexao();
+
+			// metodo da classe que aplica query sem retorno.
+			acessaBanco.aplicaQuerySemRetorno("INSERT INTO FCXA VALUES ("
+					+ codCxa + ",'" + descricao + "'," + saldoInicial + ","
+					+ 0.0 + ")");
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Ocorreu um erro ao incluir Conta Caixa: \n" + e.getClass()
+							+ "\n" + e.getMessage());
+		}
+
+	}
+
+	public ArrayList<FinCXAClass> selecionar() {
+
+		ResultSet rs;
+
+		// cria array para receber os dados do Select
+
+		ArrayList<FinCXAClass> arrayCxa = new ArrayList<FinCXAClass>();
+
+		try {
+			// cria conexão.
+			Conexao acessaBanco = new Conexao();
+			//
+			rs = acessaBanco.aplicaQueryComRetorno("SELECT * FROM FCXA");
+
+			while (rs.next()) {
+				// cria classe para receber da consulta sql.
+				FinCXAClass novoFinCXA = new FinCXAClass();
+
+				// seta os campos para o objeto.
+				novoFinCXA.setCodCxa(rs.getInt(1));
+				novoFinCXA.setDescricao(rs.getString(2));
+				novoFinCXA.setSaldoInicial(rs.getDouble(3));
+				novoFinCXA.setSaldoAtual(rs.getDouble(4));
+
+				// adiciona no array que será retornado no final do metodo.
+				arrayCxa.add(novoFinCXA);
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Não realizar a busca dos Extratos.\n" + e.getMessage()
+							+ "\n" + e.getClass());
+		}
+
+		return arrayCxa;
+
+	}
+
+	public void selecionaValores(JTable tblCxa) {
+		try {
+
+			// informa o modelo da tela
+			DefaultTableModel modelo = (DefaultTableModel) tblCxa.getModel();
+			;
+
+			// cria o novo cliente que será adicionado na lista de clientes que
+			// será enviado para o JTable
+			FinCXAClass novaCXA = new FinCXAClass();
+
+			// apaga a tabela para não incluí-la 2x.
+			while (modelo.getRowCount() != 0) {
+				modelo.removeRow(0);
+			}
+
+			// Metodo XXX.selecionar é um metodo que retornará todos os
+			// clientes/ fornecedores do banco em forma
+			// de ArrayList<FinCFOClass>
+			// desta forma teremos uma lista com todos os clientes fornecedores
+			// que estão no banco.
+
+			ArrayList<FinCXAClass> listaCXA = novaCXA.selecionar();
+
+			// faremos um foreach para enviar os valores da lista para dentro da
+			// tabela.
+
+			for (FinCXAClass novoFinCXA : listaCXA) {
+
+				// ordem de inserir no banco e no modelo.
+				// codcfo, nome, cgccfo, endereco, telefone
+
+				// cada linha que será rodada no Array será adicionada a uma
+				// lista de objeto.
+				Object[] linhaTabela = { novoFinCXA.getCodCxa(),
+						novoFinCXA.getDescricao(),
+						novoFinCXA.getSaldoInicial(),
+						novoFinCXA.getSaldoAtual() };
+
+				// será adicionado a lista de objetos no modelo da tabela.
+				modelo.addRow(linhaTabela);
+			}
+			// Limpa os valores da tabela
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "ERRO: \n" + e.getMessage()
+					+ "\n" + e.getClass());
+		}
+	}
+
+	public void deleta(JTable tblCxa) {
+		try {
+			// conecta no banco.
+			Conexao acessaBanco = new Conexao();
+			// passa a query que será realizada.
+			if (JOptionPane
+					.showConfirmDialog(null,
+							"Deseja Realmente excluir o item Selecionado?\nEstá operação é irreversível!") == 0)
+				acessaBanco
+						.aplicaQuerySemRetorno("DELETE FROM FCXA WHERE CODCXA= "
+								+ tblCxa.getValueAt(tblCxa.getSelectedRow(), 0));
+
+			selecionaValores(tblCxa);
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "ERRO: \n" + e.getClass()
+					+ "\n" + e.getMessage());
+		}
+	}
+	
+	
+	public void atualiza(JTable tblCxa)
+	{
+		try {
+			//conecta no banco
+			Conexao acessaBanco = new Conexao();
+			
+			//guarda os dados dentro da consulta dentro da variavel rs.
+			
+			acessaBanco.aplicaQuerySemRetorno("UPDATE FCXA SET "
+					  + " DESCRICAO = '"+ descricao
+					  + "' WHERE CODCXA =  "+ tblCxa.getValueAt(tblCxa.getSelectedRow(), 0));
+			
+			);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+}

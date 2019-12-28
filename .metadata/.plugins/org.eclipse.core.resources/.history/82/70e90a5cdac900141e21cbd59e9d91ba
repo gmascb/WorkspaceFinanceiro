@@ -1,0 +1,550 @@
+package Forms;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Rectangle;
+import java.beans.PropertyVetoException;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.JTabbedPane;
+
+import Classes.FinLanClass;
+import Conexao.Conexao;
+import Main.Principal;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JDayChooser;
+
+import javax.swing.ScrollPaneConstants;
+
+public class FinLAN extends JInternalFrame {
+
+	private final JPanel contentPanel = new JPanel();
+	private JTable tblLan;
+	private JTextField txtIdlan;
+	private JTextField txtNumerodocumento;
+	private JTextField txtCxa;
+	private JTextField txtCliFor;
+	private JTextField txtTdo;
+	private JTextField txtValor;
+	private JTextField txtDesconto;
+	private JTextField txtJuros;
+	private JTextField txtMulta;
+	private JDayChooser txtDtEmissao;
+	private JDayChooser txtDtVencimento;
+	private JPanel buttonPane;
+	private JDateChooser dtcDtEmissao;
+	private JDateChooser dtcDtVencimento;
+	private JComboBox cbbPagRec;
+	private JButton btnAtualizarEditado;
+	private JButton btnCancela;
+
+	public void limpaCamposTela() {
+		txtIdlan.setText("");
+		txtNumerodocumento.setText("");
+		txtCxa.setText(String.valueOf(""));
+		txtCliFor.setText(String.valueOf(""));
+		txtTdo.setText(String.valueOf(""));
+		dtcDtEmissao.setDate(null);
+		dtcDtVencimento.setDate(null);
+		txtValor.setText(String.valueOf("0"));
+		txtDesconto.setText(String.valueOf("0"));
+		txtJuros.setText(String.valueOf("0"));
+		txtMulta.setText(String.valueOf("0"));
+		cbbPagRec.setSelectedIndex(0);
+	}
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Principal frame = new Principal();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 * @throws PropertyVetoException 
+	 */
+	public FinLAN() throws PropertyVetoException {
+		setMaximizable(true);
+		setClosable(true);
+		setNormalBounds(new Rectangle(0, 0, 840, 580));
+		setTitle("Lan\u00E7amentos Financeiros");
+		setBounds(100, 100, 1222, 592);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(10, 11, 642, 189);
+		contentPanel.add(tabbedPane);
+
+		JPanel tabIdentificacao = new JPanel();
+		tabbedPane.addTab("Identifica\u00E7\u00E3o", null, tabIdentificacao,
+				null);
+		tabIdentificacao.setLayout(null);
+
+		JLabel lblRefLanamento = new JLabel("Ref. Lancamento");
+		lblRefLanamento.setBounds(10, 13, 82, 14);
+		tabIdentificacao.add(lblRefLanamento);
+
+		txtIdlan = new JTextField();
+		txtIdlan.setBounds(114, 8, 86, 25);
+		tabIdentificacao.add(txtIdlan);
+		txtIdlan.setColumns(10);
+		txtIdlan.setEnabled(false);		
+
+		JLabel lblNmeroDocumento = new JLabel("N\u00FAmero Documento");
+		lblNmeroDocumento.setBounds(229, 11, 122, 14);
+		tabIdentificacao.add(lblNmeroDocumento);
+
+		txtNumerodocumento = new JTextField();
+		txtNumerodocumento.setBounds(378, 7, 86, 25);
+		tabIdentificacao.add(txtNumerodocumento);
+		txtNumerodocumento.setColumns(10);
+
+		JLabel lblCliFor = new JLabel("Cliente/Fornecedor");
+		lblCliFor.setBounds(10, 54, 94, 14);
+		tabIdentificacao.add(lblCliFor);
+
+		txtCliFor = new JTextField();
+		txtCliFor.setBounds(114, 49, 86, 25);
+		tabIdentificacao.add(txtCliFor);
+		txtCliFor.setColumns(10);
+
+		JLabel lblTipoDeDocumento = new JLabel("Tipo de Documento");
+		lblTipoDeDocumento.setBounds(10, 85, 94, 14);
+		tabIdentificacao.add(lblTipoDeDocumento);
+
+		txtTdo = new JTextField();
+		txtTdo.setBounds(114, 82, 86, 24);
+		tabIdentificacao.add(txtTdo);
+		txtTdo.setColumns(10);
+
+		JLabel lblDataEmisso = new JLabel("Data Emiss\u00E3o:");
+		lblDataEmisso.setBounds(229, 63, 82, 14);
+		tabIdentificacao.add(lblDataEmisso);
+
+		JLabel lblDataVencimento = new JLabel("Data Vencimento");
+		lblDataVencimento.setBounds(378, 63, 107, 14);
+		tabIdentificacao.add(lblDataVencimento);
+
+		JLabel lblPagarOuReceber = new JLabel("Pagar ou Receber");
+		lblPagarOuReceber.setBounds(229, 37, 122, 14);
+		tabIdentificacao.add(lblPagarOuReceber);
+
+		cbbPagRec = new JComboBox();
+		cbbPagRec.setBounds(378, 32, 122, 25);
+		cbbPagRec.setModel(new DefaultComboBoxModel(new String[] { "", "Pagar",
+				"Receber" }));
+		tabIdentificacao.add(cbbPagRec);
+
+		dtcDtEmissao = new JDateChooser("dd/MM/yyyy", "##/##/#####", ' ');
+		dtcDtEmissao.setBounds(229, 81, 132, 25);
+		tabIdentificacao.add(dtcDtEmissao);
+
+		dtcDtVencimento = new JDateChooser("dd/MM/yyyy", "##/##/#####", ' ');
+		dtcDtVencimento.setBounds(378, 81, 132, 25);
+		tabIdentificacao.add(dtcDtVencimento);
+
+		JPanel tabValores = new JPanel();
+		tabbedPane.addTab("Valores", null, tabValores, null);
+		tabValores.setLayout(null);
+
+		JLabel lblContacaixa = new JLabel("Conta/Caixa");
+		lblContacaixa.setBounds(10, 11, 73, 14);
+		tabValores.add(lblContacaixa);
+
+		txtCxa = new JTextField();
+		txtCxa.setBounds(85, 8, 86, 25);
+		tabValores.add(txtCxa);
+		txtCxa.setColumns(10);
+
+		JLabel lblValor = new JLabel("Valor");
+		lblValor.setBounds(10, 43, 46, 14);
+		tabValores.add(lblValor);
+
+		txtValor = new JTextField();
+		txtValor.setBounds(85, 37, 86, 25);
+		tabValores.add(txtValor);
+		txtValor.setColumns(10);
+		txtValor.setText("0");
+
+		JLabel lblDesconto = new JLabel("Desconto");
+		lblDesconto.setBounds(10, 81, 60, 14);
+		tabValores.add(lblDesconto);
+
+		JLabel lblJuros = new JLabel("Juros");
+		lblJuros.setBounds(266, 17, 46, 14);
+		tabValores.add(lblJuros);
+
+		txtDesconto = new JTextField();
+		txtDesconto.setBounds(85, 74, 86, 25);
+		tabValores.add(txtDesconto);
+		txtDesconto.setColumns(10);
+		txtDesconto.setText("0");
+
+		txtJuros = new JTextField();
+		txtJuros.setBounds(324, 11, 86, 25);
+		tabValores.add(txtJuros);
+		txtJuros.setColumns(10);
+		txtJuros.setText("0");
+
+		JLabel lblMulta = new JLabel("Multa");
+		lblMulta.setBounds(266, 55, 46, 14);
+		tabValores.add(lblMulta);
+
+		txtMulta = new JTextField();
+		txtMulta.setBounds(324, 49, 86, 25);
+		tabValores.add(txtMulta);
+		txtMulta.setColumns(10);
+		txtMulta.setText("0");
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 300, 1194, 255);
+		contentPanel.add(scrollPane);
+
+		tblLan = new JTable();
+		tblLan.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
+				"Ref. Lan\u00E7amento",
+				"Numero Documento", "Conta/Caixa", "Cliente/Fornecedor",
+				"Tipo de Documento", "Ref. Extrato", "Data Emiss\u00E3o",
+				"Data Vencimento", "Valor Original", "Valor Juros",
+				"Valor Multa", "Valor Desconto", "Pagar ou Receber", "Status","Data Baixa","Valor Baixado"}));
+		tblLan.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		// /BOTOES QUE ESTAO DENTRO DO BUTTONPANE
+
+		scrollPane.setViewportView(tblLan);
+		{
+			buttonPane = new JPanel();
+			buttonPane.setBounds(0, 255, 662, 33);
+			contentPanel.add(buttonPane);
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			{
+				JButton btnSair = new JButton("Cancel");
+				btnSair.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
+
+				// /BOTAO DE SALVAR
+				JButton btnSalvar = new JButton("Salvar");
+				btnSalvar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+
+						try {
+
+							// criar objeto
+							FinLanClass novoLan = new FinLanClass();
+
+							SimpleDateFormat sdf = new SimpleDateFormat(
+									"yyyy-MM-dd");
+
+							// popular objeto com campos da tela
+							novoLan.setIdlan(Integer.parseInt(txtIdlan
+									.getText()));
+							novoLan.setNumeroDocumento(txtNumerodocumento
+									.getText());
+							novoLan.setCodCxa(Integer.parseInt(txtCxa.getText()));
+							novoLan.setCodCfo(Integer.parseInt(txtCliFor
+									.getText()));
+							novoLan.setCodTdo(Integer.parseInt(txtTdo.getText()));
+							// novoLan.setIdxcx não será realizado pois o
+							// lançamento nasce sem Extrato de Caixa. então o
+							// update deverá inserir null
+							novoLan.setDataEmissao(String.valueOf(sdf
+									.format(dtcDtEmissao.getDate())));
+							novoLan.setDataVencimento(String.valueOf(sdf
+									.format(dtcDtVencimento.getDate())));
+							novoLan.setValorOriginal(Double
+									.parseDouble(txtValor.getText()));
+							novoLan.setValordesconto(Double
+									.parseDouble(txtDesconto.getText()));
+							novoLan.setValorJuros(Double.parseDouble(txtJuros
+									.getText()));
+							novoLan.setValormulta(Double.parseDouble(txtMulta
+									.getText()));
+							novoLan.setPagRec(cbbPagRec.getSelectedIndex());
+							novoLan.setStatusLan(0);
+
+							// chamar o metodo para dar o insert no banco
+							novoLan.cadastrar();
+							
+							novoLan.selecionaValores(tblLan);
+							
+							limpaCamposTela();
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+
+				JButton btnBaixar = new JButton("Baixar");
+				btnBaixar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+					
+						FinLanBaixa novaBaixa = new FinLanBaixa(tblLan);
+						FinLanClass novoLan = new FinLanClass();
+						
+						if (tblLan.getSelectedRow()>= 0)
+						{
+							novaBaixa.setVisible(true);
+							//atualiza a tabela
+							novoLan.selecionaValores(tblLan);
+						}
+						
+						else
+						JOptionPane.showMessageDialog(null, "Selecione um Lancamento!");
+						
+					}
+				});
+				buttonPane.add(btnBaixar);
+				buttonPane.add(btnSalvar);
+				// /FIM BOTAO SALVAR
+
+				// / BOTAO DE EDITAR
+				JButton btnEditar = new JButton("Editar");
+				btnEditar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+
+						// aparece botão para salvar o Editado.
+						btnAtualizarEditado.setVisible(true);
+						btnCancela.setVisible(true);
+						// desaparece com outros botões.
+						buttonPane.setVisible(false);
+
+						// muda o campo de IDLAN para disable
+						txtIdlan.setEnabled(false);
+
+						try {
+							// conecta no banco.
+							Conexao acessaBanco = new Conexao();
+
+							// traz o resultado do banco para a variavel rs.
+							ResultSet rs = acessaBanco
+									.aplicaQueryComRetorno("SELECT * FROM FLAN WHERE IDLAN = "
+											+ tblLan.getValueAt(
+													tblLan.getSelectedRow(), 0));
+
+							// pula uma linha para iniciar os dados da variavel
+							// rs.
+							rs.next();
+
+							// System.out.println("" + rs.getString(2) + "\n"
+							// + rs.getInt(3) + "\n" + rs.getInt(4) + "\n"
+							// + rs.getInt(5) + "\n" + rs.getDate(7)
+							// + "\n" + rs.getDate(8) + "\n"
+							// + rs.getDouble(9) + "\n" + rs.getDouble(10)
+							// + "\n" + rs.getDouble(11) + "\n"
+							// + rs.getDouble(12) + "\n" + rs.getInt(13));
+
+							// /joga os campos da tabela para os campos da tela.
+							txtIdlan.setText(String.valueOf(rs.getInt("IDLAN")));
+							txtNumerodocumento.setText(rs
+									.getString("NUMERODOCUMENTO"));
+							txtCxa.setText(String.valueOf(rs.getInt("CODCXA")));
+							txtCliFor.setText(String.valueOf(rs
+									.getInt("CODCFO")));
+							txtTdo.setText(String.valueOf(rs.getInt("CODTDO")));
+							dtcDtEmissao.setDate(rs.getDate("DATAEMISSAO"));
+							dtcDtVencimento.setDate(rs
+									.getDate("DATAVENCIMENTO"));
+							txtValor.setText(String.valueOf(rs
+									.getDouble("VALORORIGINAL")));
+							txtDesconto.setText(String.valueOf(rs
+									.getDouble("VALORDESCONTO")));
+							txtJuros.setText(String.valueOf(rs
+									.getDouble("VALORJUROS")));
+							txtMulta.setText(String.valueOf(rs
+									.getDouble("VALORMULTA")));
+							cbbPagRec.setSelectedIndex(rs.getInt("PAGREC"));
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					}
+				});
+				buttonPane.add(btnEditar);
+				// / FIM BOTAO EDITAR
+
+				// / BOTAO DE APAGAR
+				JButton btnApagar = new JButton("Apagar");
+				btnApagar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+
+						FinLanClass novoLan = new FinLanClass();
+						novoLan.deletar(tblLan);
+
+						// atualiza tela.
+						novoLan.selecionaValores(tblLan);
+
+					}
+				});
+				buttonPane.add(btnApagar);
+				// /FIM BOTAO DE APAGAR
+
+				// /BOTAO DE FILTRAR
+				JButton btnFiltrar = new JButton("Filtrar");
+				btnFiltrar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+
+						FinLanClass novoLan = new FinLanClass();
+						novoLan.selecionaValores(tblLan);
+
+					}
+				});
+				buttonPane.add(btnFiltrar);
+				// /FIM BOTAO DE SALVAR
+
+				// /BOTAO DE CANCELAR
+				btnSair.setActionCommand("Cancel");
+				buttonPane.add(btnSair);
+				// /FIM BOTAO DE CANCELAR
+
+			}
+		}
+
+		btnAtualizarEditado = new JButton("Atualizar Editado");
+		btnAtualizarEditado.setBounds(20, 204, 180, 39);
+		contentPanel.add(btnAtualizarEditado);
+
+		// /BOTAO DE CANCELAR A EDICAO
+		btnCancela = new JButton("Cancela");
+		btnCancela.setBounds(212, 203, 82, 41);
+		contentPanel.add(btnCancela);
+		btnCancela.setVisible(false);
+		btnCancela.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				// cancela o Editar.
+
+				// limpa os campos.
+				limpaCamposTela();
+
+				// apresenta novamente o buttonPane.
+				buttonPane.setVisible(true);
+
+				// retira o botao de atualizar o editado.
+				btnAtualizarEditado.setVisible(false);
+
+				// retira o botao de cancelar a atualização
+				btnCancela.setVisible(false);
+
+				// poe o campo de IDLAN novamente.
+				txtIdlan.setEnabled(true);
+
+			}
+		});
+
+		// /BOTAO ATUALIZAR EDITADO
+		btnAtualizarEditado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				// modifica o botão para invisivel
+				btnAtualizarEditado.setVisible(false);
+				btnCancela.setVisible(false);
+				// modifica
+				buttonPane.setVisible(true);
+				// volta o campo de IDLAN
+				txtIdlan.setEnabled(true);
+
+				// pega os dados e joga na classe para ser enviada ao update.
+
+				FinLanClass novoLan = new FinLanClass();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+				// popular objeto com campos da tela
+				novoLan.setIdlan(Integer.parseInt(txtIdlan.getText()));
+				novoLan.setNumeroDocumento(txtNumerodocumento.getText());
+				novoLan.setCodCxa(Integer.parseInt(txtCxa.getText()));
+				novoLan.setCodCfo(Integer.parseInt(txtCliFor.getText()));
+				novoLan.setCodTdo(Integer.parseInt(txtTdo.getText()));
+				// novoLan.setIdxcx não será realizado pois o lançamento nasce
+				// sem Extrato de Caixa. então o
+				// update deverá inserir null
+				novoLan.setDataEmissao(String.valueOf(sdf.format(dtcDtEmissao
+						.getDate())));
+				novoLan.setDataVencimento(String.valueOf(sdf
+						.format(dtcDtVencimento.getDate())));
+				novoLan.setValorOriginal(Double.parseDouble(txtValor.getText()));
+				novoLan.setValordesconto(Double.parseDouble(txtDesconto
+						.getText()));
+				novoLan.setValorJuros(Double.parseDouble(txtJuros.getText()));
+				novoLan.setValormulta(Double.parseDouble(txtMulta.getText()));
+				novoLan.setPagRec(cbbPagRec.getSelectedIndex());
+				novoLan.setStatusLan(0);
+
+				// dar o update em cada campo que existe na tela, mesmo que
+				// sobrepondo com os mesmos dados.
+
+				novoLan.atualizar();
+
+				// Limpar os campos da tela após salvar.
+
+				limpaCamposTela();
+
+				// atualiza a tela com os novos dados.
+				try {
+					novoLan.selecionaValores(tblLan);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
+		btnAtualizarEditado.setVisible(false);
+		
+		
+	}
+	
+	public void buscaIdLan()
+	{
+		Conexao acessaBanco = new Conexao();
+		try {
+			
+			// pega o novo IDLAN
+			ResultSet novoIdlan = acessaBanco.aplicaQueryComRetorno("SELECT MAX(IDLAN)+1 AS 'MAXIDLAN' FROM FLAN");
+			novoIdlan.next();
+			
+			txtIdlan.setText(novoIdlan.getInt("MAXIDLAN"));
+			
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+}
